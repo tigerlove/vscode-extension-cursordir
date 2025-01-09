@@ -65,13 +65,13 @@ main {
 
 .rule-card {
   padding: 16px;
-  /* height: 320px;
-  max-height: 320px; */
   background: var(--vscode-editor-background);
   border: 1px solid var(--vscode-panel-border);
   border-radius: 6px;
   display: flex;
   flex-direction: column;
+  height: 320px;
+  position: relative;
 }
 
 .rule-header {
@@ -81,12 +81,15 @@ main {
 .rule-header h3 {
   margin: 0 0 8px 0;
   color: var(--vscode-editor-foreground);
+  font-size: 16px;
+  line-height: 1.4;
 }
 
 .tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
+  margin-bottom: 12px;
 }
 
 .tag {
@@ -94,30 +97,55 @@ main {
   background: var(--vscode-badge-background);
   color: var(--vscode-badge-foreground);
   border-radius: 4px;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 .rule-preview {
-  margin-bottom: 12px;
-  max-height: 160px;
-  flex-grow: 1;
+  flex: 1;
   overflow-y: auto;
   color: var(--vscode-editor-foreground);
-  opacity: 0.8;
-  position: relative;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  padding-right: 8px;
 }
 
-.rule-preview::after {
-  content: '';
-  position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 40px;
-  background: linear-gradient(transparent, var(--vscode-editor-background));
+.rule-preview p, 
+.rule-preview h1, 
+.rule-preview h2, 
+.rule-preview h3, 
+.rule-preview h4, 
+.rule-preview h5, 
+.rule-preview h6,
+.rule-preview li,
+.rule-preview code {
+  color: var(--vscode-editor-foreground);
+}
+
+.rule-preview code {
+  background: var(--vscode-textBlockQuote-background);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-size: 12px;
+}
+
+.rule-preview::-webkit-scrollbar {
+  width: 6px;
+}
+
+.rule-preview::-webkit-scrollbar-thumb {
+  background: var(--vscode-scrollbarSlider-background);
+  border-radius: 3px;
+}
+
+.rule-preview::-webkit-scrollbar-thumb:hover {
+  background: var(--vscode-scrollbarSlider-hoverBackground);
 }
 
 .rule-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid var(--vscode-panel-border);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -128,6 +156,7 @@ main {
   align-items: center;
   gap: 8px;
   color: var(--vscode-descriptionForeground);
+  font-size: 12px;
 }
 
 .avatar {
@@ -138,12 +167,14 @@ main {
 }
 
 .use-rule-button {
-  padding: 4px 12px;
+  padding: 6px 12px;
   background: var(--vscode-button-background);
   color: var(--vscode-button-foreground);
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .use-rule-button:hover {

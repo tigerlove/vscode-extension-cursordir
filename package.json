@@ -8,6 +8,10 @@
     "name": "Lu Jianfu",
     "mail": "corleonelou@qq.com"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tigerlove/vscode-extension-cursordir"
+  },
   "icon": "assets/icon.png",
   "galleryBanner": {
     "color": "#1e1e1e",

@@ -6,7 +6,7 @@ This is an implementation of the default [Hello World](https://github.com/micros
 
 For a deeper dive into how this sample works, read the guides below.
 
-- [Extension structure](./docs/extension-structure.md)
+- [Extension structure](docs/extension-structure.md)
 - [Extension commands](./docs/extension-commands.md)
 - [Extension development cycle](./docs/extension-development-cycle.md)
 
@@ -42,3 +42,7 @@ Once the sample is open inside VS Code you can run the extension by doing the fo
 1. 通过左侧菜单列出类别列表
 2. 右侧显示prompt 卡片，点击自动设置项目.cursorrules文件，也可以添加到常用中，设置过的自动添加到常用，最新添加到常用的显示在最前面。顶部有tab切换所有和常用
 3. 通过命令面板通过名字筛选cursorrules，选择后快速设置
+
+## trouble shooting
+### npm ERR! missing:
+add --no-dependencies option to vsce package and vsce publish

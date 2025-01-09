@@ -120,8 +120,8 @@ class RulesViewProvider {
         });
     }
     _setRule(rule) {
-        var _a;
         return __awaiter(this, void 0, void 0, function* () {
+            var _a;
             console.log('Setting rule:', rule);
             const workspaceFolder = (_a = vscode.workspace.workspaceFolders) === null || _a === void 0 ? void 0 : _a[0];
             if (!workspaceFolder) {

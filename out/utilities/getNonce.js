@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getNonce = void 0;
+exports.getNonce = getNonce;
 /**
  * A helper function that returns a unique alphanumeric identifier called a nonce.
  *
@@ -17,5 +17,4 @@ function getNonce() {
     }
     return text;
 }
-exports.getNonce = getNonce;
 //# sourceMappingURL=getNonce.js.map

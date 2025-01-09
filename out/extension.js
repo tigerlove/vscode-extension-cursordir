@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deactivate = exports.activate = void 0;
+exports.activate = activate;
+exports.deactivate = deactivate;
 const vscode = require("vscode");
 const RulesViewProvider_1 = require("./panels/RulesViewProvider");
 /**
@@ -16,10 +17,8 @@ function activate(context) {
     // 将命令添加到订阅列表中，确保正确释放资源
     context.subscriptions.push(disposable);
 }
-exports.activate = activate;
 /**
  * 扩展停用时调用的清理函数
  */
 function deactivate() { }
-exports.deactivate = deactivate;
 //# sourceMappingURL=extension.js.map

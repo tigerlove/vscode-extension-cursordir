@@ -109,7 +109,7 @@ Refer to the official JAX documentation for the latest best practices on using J
 `,
         author: {
             name: "Straughter Guthrie",
-            url: "https://quickcolbert.com",
+            url: "https://quickcolbert.com", // Optional
             avatar: "https://raw.githubusercontent.com/jmanhype/cursor.directory/refs/heads/main/56135400.png", // Optional
         },
     },

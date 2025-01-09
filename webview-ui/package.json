@@ -8,11 +8,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@vscode-elements/elements": "^1.9.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-markdown": "^8.0.7",
-    "zustand": "^4.4.7"
+    "react-markdown": "^8.0.7"
   },
   "devDependencies": {
     "@types/react": "^17.0.33",

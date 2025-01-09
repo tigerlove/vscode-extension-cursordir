@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUri = void 0;
+exports.getUri = getUri;
 const vscode_1 = require("vscode");
 /**
  * A helper function which will get the webview URI of a given file or resource.
@@ -16,5 +16,4 @@ const vscode_1 = require("vscode");
 function getUri(webview, extensionUri, pathList) {
     return webview.asWebviewUri(vscode_1.Uri.joinPath(extensionUri, ...pathList));
 }
-exports.getUri = getUri;
 //# sourceMappingURL=getUri.js.map

@@ -21,6 +21,7 @@ function App() {
   const [rules, setRules] = useState<Rule[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [categories, setCategories] = useState<string[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     console.log('App useEffect triggered');
@@ -58,28 +59,61 @@ function App() {
     vscode.postMessage({ type: 'setRule', rule });
   };
 
-  const filteredRules = selectedCategory === 'all' 
-    ? rules 
-    : rules.filter(rule => rule.tags.includes(selectedCategory));
-  
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(event.target.value.toLowerCase());
+  };
+
+  // Filter categories based on search query
+  const filteredCategories = categories.filter(category => 
+    category === 'all' || category.toLowerCase().includes(searchQuery)
+  );
+
+  // Filter rules by selected category
+  const filteredRules = rules.filter(rule => 
+    selectedCategory === 'all' || rule.tags.includes(selectedCategory)
+  );
+
+  // Calculate category counts
+  const categoryRuleCounts = rules.reduce((acc, rule) => {
+    rule.tags.forEach(tag => {
+      acc[tag] = (acc[tag] || 0) + 1;
+    });
+    return acc;
+  }, {} as Record<string, number>);
+
   console.log('Rendering with:', {
     rulesCount: rules.length,
+    filteredCategoriesCount: filteredCategories.length,
+    finalFilteredCount: filteredRules.length,
     selectedCategory,
-    filteredRulesCount: filteredRules.length,
-    categories
+    searchQuery
   });
 
   return (
     <div className="app-container">
       <div className="sidebar">
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Search categories..."
+            value={searchQuery}
+            onChange={handleSearchChange}
+            className="search-input"
+          />
+        </div>
         <nav>
-          {categories.map(category => (
+          {filteredCategories.map(category => (
             <button
               key={category}
               className={`category-button ${selectedCategory === category ? 'active' : ''}`}
               onClick={() => setSelectedCategory(category)}
             >
               {category}
+              <span className="category-count">
+                {category === 'all' 
+                  ? rules.length
+                  : categoryRuleCounts[category] || 0}
+              </span>
             </button>
           ))}
         </nav>

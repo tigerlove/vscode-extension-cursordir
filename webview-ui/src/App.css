@@ -26,7 +26,7 @@ main {
 
 .category-button {
   width: 100%;
-  padding: 8px 16px;
+  padding: 6px 8px;
   margin: 2px 0;
   text-align: left;
   background: none;
@@ -34,6 +34,10 @@ main {
   color: var(--vscode-foreground);
   cursor: pointer;
   border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
 }
 
 .category-button:hover {
@@ -153,4 +157,37 @@ main {
   --input-padding-horizontal: 4px;
   --input-margin-vertical: 4px;
   --input-margin-horizontal: 0;
+}
+
+.search-container {
+  padding: 8px;
+  border-bottom: 1px solid var(--vscode-sideBar-border);
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+  padding: 4px 8px;
+  border: 1px solid var(--vscode-input-border);
+  background: var(--vscode-input-background);
+  color: var(--vscode-input-foreground);
+  border-radius: 2px;
+  outline: none;
+  box-sizing: border-box;
+  font-size: 12px;
+}
+
+.search-input:focus {
+  border-color: var(--vscode-focusBorder);
+}
+
+.category-count {
+  padding: 1px 6px;
+  background: var(--vscode-badge-background);
+  color: var(--vscode-badge-foreground);
+  border-radius: 10px;
+  font-size: 11px;
+  min-width: 14px;
+  text-align: center;
 }

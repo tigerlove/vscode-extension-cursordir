@@ -9,3 +9,4 @@ For a deeper dive into how this sample works, read the guides below.
 
 
 ## Screenshot
+![useage](assets/demo.gif)

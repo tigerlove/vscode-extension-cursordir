@@ -29,9 +29,13 @@ out/test/**
 
 # Include necessary build files
 !out/**
-!webview-ui/build/**
 
-# Exclude webview development files
-webview-ui/**
-!webview-ui/build
+# Webview files - keep build directory
+webview-ui/src/**
+webview-ui/public/**
+webview-ui/node_modules/**
+webview-ui/*.json
+webview-ui/*.js
+webview-ui/*.ts
+webview-ui/*.lock
 !webview-ui/build/** 

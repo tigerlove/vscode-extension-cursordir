@@ -24,10 +24,10 @@ export class RulesViewProvider {
   public static readonly viewType = 'cursor-rules.rulesView';
   private _panel?: vscode.WebviewPanel;
   private static _instance: RulesViewProvider;
-  private static readonly RULES_URL = 'https://raw.githubusercontent.com/tigerlove/vscode-extension-cursordir/main/webview/src/rules.json';
+  private static readonly RULES_URL = 'https://raw.githubusercontent.com/tigerlove/vscode-extension-cursordir/main/webview-ui/src/rules.json';
   private static readonly LAST_SYNC_KEY = 'cursorRules.lastSync';
   private static readonly RULES_CACHE_KEY = 'cursorRules.cachedRules';
-  private static readonly RULES_JSON_PATH = path.join(__dirname, '..', '..', 'webview-ui', 'build', 'assets', 'rules.json');
+  private static readonly RULES_JSON_PATH = path.join(__dirname, '..', '..', 'webview-ui', 'build', 'rules.json');
   private static readonly RULES_ROOT_PATH = path.join(__dirname, '..', '..', 'rules.json');
 
   private constructor(private readonly _extensionUri: vscode.Uri) {
@@ -133,7 +133,7 @@ export class RulesViewProvider {
       try {
         const response = await fetch(RulesViewProvider.RULES_URL, {
           method: 'HEAD',
-          timeout: 5000 // 5 second timeout
+          timeout: 50000 // 5 second timeout
         });
         isOffline = !response.ok;
       } catch (error) {

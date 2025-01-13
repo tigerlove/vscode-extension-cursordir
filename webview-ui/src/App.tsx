@@ -2,6 +2,13 @@ import { useEffect, useState } from 'react';
 import { vscode } from './utilities/vscode';
 import RuleCard from './components/RuleCard';
 import './App.css';
+import rulesData from './rules.json';
+
+interface RuleAuthor {
+  name: string;
+  url: string | null;
+  avatar: string | null;
+}
 
 interface Rule {
   title: string;
@@ -9,11 +16,7 @@ interface Rule {
   slug: string;
   libs: string[];
   content: string;
-  author: {
-    name: string;
-    url: string;
-    avatar: string | null;
-  };
+  author: RuleAuthor;
 }
 
 function App() {
@@ -29,7 +32,17 @@ function App() {
 
   useEffect(() => {
     console.log('App useEffect triggered - initial setup');
-    // Request rules from extension
+    // Set initial rules from local file
+    setRules(rulesData as Rule[]);
+    // Extract categories from local rules
+    const cats = Array.from(new Set((rulesData as Rule[]).flatMap(r => r.tags))) as string[];
+    setCategories(['all', ...cats.sort((a, b) => {
+      const countA = (rulesData as Rule[]).filter(r => r.tags.includes(a)).length;
+      const countB = (rulesData as Rule[]).filter(r => r.tags.includes(b)).length;
+      return countB - countA;
+    })]);
+    
+    // Request rules from extension for potential updates
     console.log('Sending getRules message to extension');
     vscode.postMessage({ type: 'getRules' });
 

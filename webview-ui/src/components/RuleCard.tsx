@@ -1,17 +1,19 @@
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
+interface RuleAuthor {
+  name: string;
+  url: string | null;
+  avatar: string | null;
+}
+
 interface Rule {
   title: string;
   tags: string[];
   slug: string;
   libs: string[];
   content: string;
-  author: {
-    name: string;
-    url: string;
-    avatar: string | null;
-  };
+  author: RuleAuthor;
 }
 
 interface RuleCardProps {
@@ -41,13 +43,13 @@ const RuleCard: React.FC<RuleCardProps> = ({ rule, onSelect }) => {
       </div>
       <div className="rule-footer">
         <div className="author">
-          {rule.author.avatar && (
+          {/* {rule.author.avatar && (
             <img 
               src={rule.author.avatar} 
               alt={`${rule.author.name}'s avatar`} 
               className="avatar" 
             />
-          )}
+          )} */}
           <span>{rule.author.name}</span>
         </div>
         <button className="use-rule-button" onClick={handleClick}>

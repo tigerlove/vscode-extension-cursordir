@@ -38,6 +38,13 @@ const RuleCard: React.FC<RuleCardProps> = ({ rule, onSelect }) => {
           ))}
         </div>
       </div>
+<div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, 1fr)',
+        gap: '16px',
+        flex: 1,
+        minHeight: 0
+      }}>
       <div className="rule-preview">
         <ReactMarkdown>{previewContent}</ReactMarkdown>
       </div>

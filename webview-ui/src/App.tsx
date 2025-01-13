@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { vscode } from './utilities/vscode';
 import RuleCard from './components/RuleCard';
 import './App.css';
-import rulesData from './rules.json';
+import rulesData from '../public/rules.json';
 
 interface RuleAuthor {
   name: string;

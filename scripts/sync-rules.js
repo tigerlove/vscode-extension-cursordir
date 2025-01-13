@@ -5,7 +5,7 @@ const https = require('https');
 const GITHUB_API_URL = 'https://api.github.com/repos/pontusab/cursor.directory/contents/src/data/rules';
 const CURSOR_DIRECTORY_BASE_URL = 'https://raw.githubusercontent.com/pontusab/cursor.directory/main/src/data/rules';
 const LOCAL_RULES_DIR = path.join(__dirname, '..', 'src', 'rules');
-const WEBVIEW_SRC_RULES_PATH = path.join(__dirname, '..', 'webview-ui', 'src', 'rules.json');
+const WEBVIEW_SRC_RULES_PATH = path.join(__dirname, '..', 'webview-ui', 'public', 'rules.json');
 
 // Function to fetch content from a URL with proper GitHub API headers
 function fetchUrl(url, isApi = false) {

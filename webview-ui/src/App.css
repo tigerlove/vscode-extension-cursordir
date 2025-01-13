@@ -126,7 +126,132 @@ nav {
 
 .rules-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 16px;
   padding-bottom: 16px;
 }
+
+.rule-card {
+  background-color: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  padding: '16px';
+  gap: '16px';
+  flex-direction: column;
+  height: 400px;
+}
+
+.rule-header {
+  margin-bottom: 16px;
+}
+
+.rule-header h3 {
+  margin: 0 0 8px 0;
+  color: var(--vscode-foreground);
+}
+.rule-title {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin-bottom: 8px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag {
+  background-color: var(--vscode-badge-background);
+  color: var(--vscode-badge-foreground);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.rule-content-container {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 16px;
+  flex: 1;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.rule-preview {
+  overflow-y: auto;
+  padding: 12px;
+  font-size: 14px;
+  background-color: var(--vscode-editor-background);
+  border: 1px solid var(--vscode-panel-border);
+  border-radius: 4px;
+}
+
+.rule-preview::-webkit-scrollbar {
+  width: 8px;
+}
+
+.rule-preview::-webkit-scrollbar-track {
+  background: var(--vscode-scrollbarSlider-background);
+  border-radius: 4px;
+}
+
+.rule-preview::-webkit-scrollbar-thumb {
+  background: var(--vscode-scrollbarSlider-hoverBackground);
+  border-radius: 4px;
+}
+
+.rule-libs {
+  border-left: 1px solid var(--vscode-panel-border);
+  padding-left: 16px;
+}
+
+.rule-libs h4 {
+  margin: 0 0 12px 0;
+  color: var(--vscode-foreground);
+}
+
+.libs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.lib-tag {
+  background-color: var(--vscode-textBlockQuote-background);
+  color: var(--vscode-foreground);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+.rule-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto;
+}
+
+.author {
+  color: var(--vscode-descriptionForeground);
+  font-size: 13px;
+}
+
+.use-rule-button {
+  background-color: var(--vscode-button-background);
+  color: var(--vscode-button-foreground);
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.use-rule-button:hover {
+  background-color: var(--vscode-button-hoverBackground);
+}
+
+

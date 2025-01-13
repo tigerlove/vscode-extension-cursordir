@@ -24,7 +24,7 @@ export class RulesViewProvider {
   public static readonly viewType = 'cursor-rules.rulesView';
   private _panel?: vscode.WebviewPanel;
   private static _instance: RulesViewProvider;
-  private static readonly RULES_URL = 'https://raw.githubusercontent.com/tigerlove/vscode-extension-cursordir/main/webview-ui/src/rules.json';
+  private static readonly RULES_URL = 'https://raw.githubusercontent.com/tigerlove/vscode-extension-cursordir/main/webview-ui/public/rules.json';
   private static readonly LAST_SYNC_KEY = 'cursorRules.lastSync';
   private static readonly RULES_CACHE_KEY = 'cursorRules.cachedRules';
   private static readonly RULES_JSON_PATH = path.join(__dirname, '..', '..', 'webview-ui', 'build', 'rules.json');

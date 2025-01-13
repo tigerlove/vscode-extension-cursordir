@@ -1,3 +1,4 @@
+import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
 interface Rule {
@@ -9,7 +10,7 @@ interface Rule {
   author: {
     name: string;
     url: string;
-    avatar: string;
+    avatar: string | null;
   };
 }
 
@@ -19,16 +20,19 @@ interface RuleCardProps {
 }
 
 const RuleCard: React.FC<RuleCardProps> = ({ rule, onSelect }) => {
-  // const previewContent = rule.content.split('\n').slice(0, 3).join('\n');
-  const previewContent = rule.content;
+  const handleClick = () => {
+    onSelect(rule);
+  };
+
+  const previewContent = `${rule.content.slice(0, 200)}...`;
 
   return (
     <div className="rule-card">
       <div className="rule-header">
         <h3>{rule.title}</h3>
         <div className="tags">
-          {rule.tags.map((tag) => (
-            <span key={tag} className="tag">{tag}</span>
+          {rule.tags.map((tag, index) => (
+            <span key={index} className="tag">{tag}</span>
           ))}
         </div>
       </div>
@@ -37,10 +41,16 @@ const RuleCard: React.FC<RuleCardProps> = ({ rule, onSelect }) => {
       </div>
       <div className="rule-footer">
         <div className="author">
-          {/* <img src={rule.author.avatar} alt={rule.author.name} className="avatar" /> */}
+          {rule.author.avatar && (
+            <img 
+              src={rule.author.avatar} 
+              alt={`${rule.author.name}'s avatar`} 
+              className="avatar" 
+            />
+          )}
           <span>{rule.author.name}</span>
         </div>
-        <button className="use-rule-button" onClick={() => onSelect(rule)}>
+        <button className="use-rule-button" onClick={handleClick}>
           Use Rule
         </button>
       </div>

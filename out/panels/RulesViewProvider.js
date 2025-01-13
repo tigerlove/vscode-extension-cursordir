@@ -138,7 +138,7 @@ class RulesViewProvider {
                 }
             }
             try {
-                fs.writeFileSync(cursorRulesPath, JSON.stringify(rule, null, 2));
+                fs.writeFileSync(cursorRulesPath, rule.content);
                 vscode.window.showInformationMessage(`Successfully applied rule: ${rule.title}`);
             }
             catch (error) {

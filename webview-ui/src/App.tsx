@@ -12,7 +12,7 @@ interface Rule {
   author: {
     name: string;
     url: string;
-    avatar: string;
+    avatar: string | null;
   };
 }
 
@@ -22,6 +22,10 @@ function App() {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [categories, setCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [lastSync, setLastSync] = useState<number | null>(null);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [needsSync, setNeedsSync] = useState(false);
+  const [isOffline, setIsOffline] = useState(false);
 
   useEffect(() => {
     console.log('App useEffect triggered');
@@ -41,6 +45,9 @@ function App() {
       case 'setRules':
         console.log('Setting rules:', message.rules);
         setRules(message.rules);
+        setLastSync(message.lastSync);
+        setNeedsSync(message.needsSync);
+        setIsOffline(message.isOffline);
         // Extract unique categories and sort by rule count
         const cats = Array.from(new Set(message.rules.flatMap((r: Rule) => r.tags))) as string[];
         const sortedCats = cats.sort((a, b) => {
@@ -51,12 +58,23 @@ function App() {
         console.log('Setting categories:', ['all', ...sortedCats]);
         setCategories(['all', ...sortedCats]);
         break;
+      case 'syncComplete':
+        setIsSyncing(false);
+        setLastSync(message.lastSync);
+        setNeedsSync(false);
+        setIsOffline(false);
+        break;
     }
   };
 
   const handleRuleSelect = (rule: Rule) => {
     console.log('Rule selected:', rule);
     vscode.postMessage({ type: 'setRule', rule });
+  };
+
+  const handleSync = () => {
+    setIsSyncing(true);
+    vscode.postMessage({ type: 'syncRules' });
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -81,12 +99,20 @@ function App() {
     return acc;
   }, {} as Record<string, number>);
 
+  const formatLastSync = (timestamp: number | null) => {
+    if (!timestamp) return 'Never';
+    const date = new Date(timestamp);
+    return date.toLocaleString();
+  };
+
   console.log('Rendering with:', {
     rulesCount: rules.length,
     filteredCategoriesCount: filteredCategories.length,
     finalFilteredCount: filteredRules.length,
     selectedCategory,
-    searchQuery
+    searchQuery,
+    needsSync,
+    isOffline
   });
 
   return (
@@ -100,6 +126,21 @@ function App() {
             onChange={handleSearchChange}
             className="search-input"
           />
+          <div className="sync-container">
+            {(needsSync || isOffline) && (
+              <button 
+                className={`sync-button ${isOffline ? 'offline' : ''}`}
+                onClick={handleSync}
+                disabled={isSyncing}
+              >
+                {isSyncing ? 'Syncing...' : isOffline ? 'Sync Rules (Offline)' : 'Sync Rules'}
+              </button>
+            )}
+            <div className="last-sync">
+              Last sync: {formatLastSync(lastSync)}
+              {isOffline && <span className="offline-indicator"> (Using local rules)</span>}
+            </div>
+          </div>
         </div>
         <nav>
           {filteredCategories.map(category => (

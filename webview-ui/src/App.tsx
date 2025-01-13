@@ -28,42 +28,68 @@ function App() {
   const [isOffline, setIsOffline] = useState(false);
 
   useEffect(() => {
-    console.log('App useEffect triggered');
+    console.log('App useEffect triggered - initial setup');
     // Request rules from extension
     console.log('Sending getRules message to extension');
     vscode.postMessage({ type: 'getRules' });
 
     // Handle messages from extension
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
+    const messageHandler = (event: MessageEvent) => {
+      console.log('Message received in event handler:', event.data);
+      handleMessage(event);
+    };
+
+    window.addEventListener('message', messageHandler);
+    console.log('Message event listener added');
+
+    return () => {
+      console.log('Cleaning up message event listener');
+      window.removeEventListener('message', messageHandler);
+    };
   }, []);
 
   const handleMessage = (event: MessageEvent) => {
-    console.log('Received message from extension:', event.data);
+    console.log('handleMessage called with data:', event.data);
     const message = event.data;
     switch (message.type) {
       case 'setRules':
-        console.log('Setting rules:', message.rules);
+        console.log('Processing setRules message');
+        console.log('Rules array length:', message.rules?.length ?? 'undefined');
+        console.log('Last sync:', message.lastSync);
+        console.log('Needs sync:', message.needsSync);
+        console.log('Is offline:', message.isOffline);
+        
+        if (!Array.isArray(message.rules)) {
+          console.error('Received rules is not an array:', message.rules);
+          return;
+        }
+
         setRules(message.rules);
         setLastSync(message.lastSync);
         setNeedsSync(message.needsSync);
         setIsOffline(message.isOffline);
+
         // Extract unique categories and sort by rule count
         const cats = Array.from(new Set(message.rules.flatMap((r: Rule) => r.tags))) as string[];
+        console.log('Extracted categories:', cats);
+        
         const sortedCats = cats.sort((a, b) => {
           const countA = message.rules.filter((r: Rule) => r.tags.includes(a)).length;
           const countB = message.rules.filter((r: Rule) => r.tags.includes(b)).length;
           return countB - countA;
         });
-        console.log('Setting categories:', ['all', ...sortedCats]);
+        console.log('Sorted categories:', ['all', ...sortedCats]);
         setCategories(['all', ...sortedCats]);
         break;
       case 'syncComplete':
+        console.log('Processing syncComplete message');
         setIsSyncing(false);
         setLastSync(message.lastSync);
         setNeedsSync(false);
         setIsOffline(false);
         break;
+      default:
+        console.log('Unhandled message type:', message.type);
     }
   };
 

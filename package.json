@@ -43,12 +43,27 @@
         "title": "Open Cursor Rules Viewer",
         "category": "Cursor Rules"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Cursor Rules",
+      "properties": {
+        "cursorRules.cachedRules": {
+          "type": "string",
+          "default": "",
+          "description": "Cached rules data"
+        },
+        "cursorRules.lastSync": {
+          "type": "number",
+          "default": null,
+          "description": "Timestamp of last rules sync"
+        }
+      }
+    }
   },
   "scripts": {
     "install:all": "npm install && cd webview-ui && npm install",
     "start:webview": "cd webview-ui && npm run start",
-    "build:webview": "cd webview-ui && npm run build",
+    "build:webview": "npm run sync-rules && cd webview-ui && npm run build",
     "vscode:prepublish": "npm run build:webview && npm run compile",
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",

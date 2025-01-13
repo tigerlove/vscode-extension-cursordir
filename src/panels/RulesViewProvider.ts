@@ -24,10 +24,10 @@ export class RulesViewProvider {
   public static readonly viewType = 'cursor-rules.rulesView';
   private _panel?: vscode.WebviewPanel;
   private static _instance: RulesViewProvider;
-  private static readonly RULES_URL = 'https://raw.githubusercontent.com/tigertiger/vscode-extension-cursordir/main/rules.json';
-  private static readonly LAST_SYNC_KEY = 'lastRulesSync';
+  private static readonly RULES_URL = 'https://raw.githubusercontent.com/tigerlove/vscode-extension-cursordir/main/rules.json';
+  private static readonly LAST_SYNC_KEY = 'cursorRules.lastSync';
   private static readonly RULES_CACHE_KEY = 'cursorRules.cachedRules';
-  private static readonly DEFAULT_RULES_DIR = path.join(__dirname, '..', 'rules');
+  private static readonly RULES_JSON_PATH = path.join(__dirname, '..', '..', 'webview-ui', 'build', 'assets', 'rules.json');
 
   private constructor(private readonly _extensionUri: vscode.Uri) {
     console.log('RulesViewProvider constructor called');
@@ -113,69 +113,69 @@ export class RulesViewProvider {
   }
 
   private async _loadRules(): Promise<{ rules: Rule[]; needsSync: boolean; isOffline: boolean }> {
+    console.log('Starting _loadRules function');
     try {
+      // Load local rules first
+      console.log('Loading local rules');
+      const localRules = await this._loadLocalRules();
+      console.log('Loaded local rules count:', localRules.length);
+
+      if (localRules.length === 0) {
+        console.log('No local rules found');
+        vscode.window.showWarningMessage('No local rules found. Please check the rules directory.');
+        return { rules: [], needsSync: true, isOffline: true };
+      }
+
+      // Check if we should try to sync
       const lastSync = await this._getLastSync();
+      console.log('Last sync timestamp:', lastSync);
       const needsSync = !lastSync || Date.now() - lastSync > 24 * 60 * 60 * 1000; // 24 hours
+      console.log('Needs sync:', needsSync);
 
-      // Try to load cached rules first
-      const cachedRulesStr = await vscode.workspace.getConfiguration().get(RulesViewProvider.RULES_CACHE_KEY);
+      // Try to load cached rules
+      const cachedRulesStr = await vscode.workspace.getConfiguration().get<string>(RulesViewProvider.RULES_CACHE_KEY);
+      console.log('Cached rules string exists:', !!cachedRulesStr);
       const cachedRules = cachedRulesStr ? JSON.parse(cachedRulesStr) as Rule[] : null;
+      console.log('Parsed cached rules count:', cachedRules?.length ?? 0);
 
-      // If we need to sync and we're online, try to sync
-      if (needsSync) {
-        try {
-          const syncedRules = await this._syncRules();
-          return { rules: syncedRules, needsSync: false, isOffline: false };
-        } catch (error) {
-          console.error('Failed to sync rules:', error);
-          // If we have cached rules, use them
-          if (cachedRules) {
-            return { rules: cachedRules, needsSync: true, isOffline: true };
-          }
-        }
-      } else if (cachedRules) {
+      // If we have cached rules and don't need sync, use them
+      if (cachedRules && !needsSync) {
+        console.log('Using cached rules, no sync needed');
         return { rules: cachedRules, needsSync: false, isOffline: false };
       }
 
-      // If we reach here, we need to load local rules
-      const localRules = await this._loadLocalRules();
-      return { rules: localRules, needsSync: true, isOffline: true };
+      // Try to sync in the background if needed
+      if (needsSync) {
+        this._syncRules().catch(error => {
+          console.log('Background sync failed:', error);
+          // Don't show error message for background sync
+        });
+      }
+
+      // Return local rules while sync happens in background
+      return { rules: localRules, needsSync, isOffline: true };
     } catch (error) {
-      console.error('Error loading rules:', error);
-      vscode.window.showErrorMessage('Failed to load rules. Loading local rules as fallback.');
-      const localRules = await this._loadLocalRules();
-      return { rules: localRules, needsSync: true, isOffline: true };
+      console.error('Error in _loadRules:', error);
+      vscode.window.showErrorMessage('Failed to load rules. Please check the console for details.');
+      return { rules: [], needsSync: true, isOffline: true };
     }
   }
 
   private async _loadLocalRules(): Promise<Rule[]> {
+    console.log('Starting _loadLocalRules function');
     try {
-      // Import all rule files from the rules directory
-      const ruleFiles = fs.readdirSync(RulesViewProvider.DEFAULT_RULES_DIR);
-      const rules: Rule[] = [];
-
-      for (const file of ruleFiles) {
-        if (file.endsWith('.ts') && !file.endsWith('.d.ts')) {
-          const filePath = path.join(RulesViewProvider.DEFAULT_RULES_DIR, file);
-          const content = fs.readFileSync(filePath, 'utf-8');
-          
-          // Extract the rules array from the file content using regex
-          const rulesMatch = content.match(/export const \w+Rules = (\[[\s\S]*?\]);/);
-          if (rulesMatch && rulesMatch[1]) {
-            try {
-              // Parse the rules array
-              const fileRules = eval(rulesMatch[1]) as Rule[];
-              rules.push(...fileRules);
-            } catch (error) {
-              console.error(`Error parsing rules from ${file}:`, error);
-            }
-          }
-        }
+      console.log('Loading rules from:', RulesViewProvider.RULES_JSON_PATH);
+      if (!fs.existsSync(RulesViewProvider.RULES_JSON_PATH)) {
+        console.log('Rules.json not found');
+        return [];
       }
 
+      const content = fs.readFileSync(RulesViewProvider.RULES_JSON_PATH, 'utf-8');
+      const rules = JSON.parse(content) as Rule[];
+      console.log('Successfully loaded rules from JSON, count:', rules.length);
       return rules;
     } catch (error) {
-      console.error('Error loading local rules:', error);
+      console.error('Error loading rules from JSON:', error);
       return [];
     }
   }

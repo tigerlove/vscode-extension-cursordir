@@ -166,7 +166,7 @@ function App() {
             className="search-input"
           />
           <div className="sync-container">
-            {(needsSync || isOffline) && (
+            {(needsSync && !isOffline) && (
               <button 
                 className={`sync-button ${isOffline ? 'offline' : ''}`}
                 onClick={handleSync}
@@ -199,12 +199,20 @@ function App() {
         </nav>
       </div>
       <div className="content">
-        <div className="rules-grid">
-          {filteredRules.map((rule, index) => (
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', // Responsive columns
+          gap: '16px',
+          padding: '16px',
+          height: '100vh',
+          overflow: 'auto',
+          maxWidth: '100%'
+        }}>
+          {rules.map((rule) => (
             <RuleCard 
-              key={`${rule.slug}-${index}`}
-              rule={rule}
-              onSelect={handleRuleSelect}
+              key={rule.slug} 
+              rule={rule} 
+              onSelect={handleRuleSelect} 
             />
           ))}
         </div>

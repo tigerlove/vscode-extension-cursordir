@@ -26,38 +26,33 @@ const RuleCard: React.FC<RuleCardProps> = ({ rule, onSelect }) => {
     onSelect(rule);
   };
 
-  const previewContent = `${rule.content.slice(0, 200)}...`;
+  const removeIndentation = (content: string) => {
+    return content.split('\n').map(line => line.trimStart()).join('\n');
+  };
 
   return (
     <div className="rule-card">
       <div className="rule-header">
-        <h3>{rule.title}</h3>
+        <h3 className="rule-title">
+          {rule.title}
+        </h3>
         <div className="tags">
           {rule.tags.map((tag, index) => (
             <span key={index} className="tag">{tag}</span>
           ))}
         </div>
       </div>
-<div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)',
-        gap: '16px',
-        flex: 1,
-        minHeight: 0
-      }}>
       <div className="rule-preview">
-        <ReactMarkdown>{previewContent}</ReactMarkdown>
+        <ReactMarkdown>{removeIndentation(rule.content)}</ReactMarkdown>
       </div>
-      <div className="rule-footer">
+      <div className="rule-footer" style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginTop: 'auto'
+      }}>
         <div className="author">
-          {/* {rule.author.avatar && (
-            <img 
-              src={rule.author.avatar} 
-              alt={`${rule.author.name}'s avatar`} 
-              className="avatar" 
-            />
-          )} */}
-          <span>{rule.author.name}</span>
+          {rule.author.name}
         </div>
         <button className="use-rule-button" onClick={handleClick}>
           Use Rule

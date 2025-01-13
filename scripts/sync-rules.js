@@ -5,7 +5,7 @@ const https = require('https');
 const GITHUB_API_URL = 'https://api.github.com/repos/pontusab/cursor.directory/contents/src/data/rules';
 const CURSOR_DIRECTORY_BASE_URL = 'https://raw.githubusercontent.com/pontusab/cursor.directory/main/src/data/rules';
 const LOCAL_RULES_DIR = path.join(__dirname, '..', 'src', 'rules');
-const RULES_JSON_PATH = path.join(__dirname, '..', 'webview-ui', 'build', 'assets', 'rules.json');
+const WEBVIEW_SRC_RULES_PATH = path.join(__dirname, '..', 'webview-ui', 'src', 'rules.json');
 
 // Function to fetch content from a URL with proper GitHub API headers
 function fetchUrl(url, isApi = false) {
@@ -81,9 +81,12 @@ async function syncRules() {
       }
     }
 
-    // Write combined rules to rules.json
-    writeFileWithDir(RULES_JSON_PATH, JSON.stringify(rules, null, 2));
-    console.log(`Successfully synced ${rules.length} rules to ${RULES_JSON_PATH}`);
+    // Format rules JSON with pretty printing
+    const rulesJson = JSON.stringify(rules, null, 2);
+
+    // Write combined rules to webview-ui/src/rules.json
+    writeFileWithDir(WEBVIEW_SRC_RULES_PATH, rulesJson);
+    console.log(`Successfully synced ${rules.length} rules to ${WEBVIEW_SRC_RULES_PATH}`);
 
   } catch (error) {
     console.error('Error syncing rules:', error);

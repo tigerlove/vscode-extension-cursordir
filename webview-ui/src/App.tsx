@@ -23,6 +23,7 @@ function App() {
   console.log('App component rendering');
   const [rules, setRules] = useState<Rule[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  console.log('Current selectedCategory:', selectedCategory);
   const [categories, setCategories] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [lastSync, setLastSync] = useState<number | null>(null);
@@ -126,9 +127,31 @@ function App() {
   );
 
   // Filter rules by selected category
-  const filteredRules = rules.filter(rule => 
-    selectedCategory === 'all' || rule.tags.includes(selectedCategory)
-  );
+  const filteredRules = rules.filter(rule => {
+    const shouldInclude = selectedCategory === 'all' || rule.tags.includes(selectedCategory);
+    console.log(`Rule ${rule.title}: tags=${JSON.stringify(rule.tags)}, selectedCategory=${selectedCategory}, included=${shouldInclude}`);
+    return shouldInclude;
+  });
+
+  // Check for duplicate slugs
+  const slugCounts = filteredRules.reduce((acc, rule) => {
+    acc[rule.slug] = (acc[rule.slug] || 0) + 1;
+    return acc;
+  }, {} as Record<string, number>);
+
+  const duplicateSlugs = Object.entries(slugCounts)
+    .filter(([_, count]) => count > 1)
+    .map(([slug]) => slug);
+
+  if (duplicateSlugs.length > 0) {
+    console.warn('Found duplicate slugs:', duplicateSlugs);
+    console.warn('Rules with duplicate slugs:', filteredRules.filter(r => duplicateSlugs.includes(r.slug)));
+  }
+
+  console.log('selectedCategory:', selectedCategory);
+  console.log('Total rules before filtering:', rules.length);
+  console.log('Filtered rules count:', filteredRules.length);
+  console.log('Filtered rules:', filteredRules.map(r => r.title));
 
   // Calculate category counts
   const categoryRuleCounts = rules.reduce((acc, rule) => {
@@ -186,7 +209,11 @@ function App() {
             <button
               key={category}
               className={`category-button ${selectedCategory === category ? 'active' : ''}`}
-              onClick={() => setSelectedCategory(category)}
+              onClick={() => {
+                console.log('Category clicked:', category);
+                setSelectedCategory(category);
+                console.log('Setting category to:', category);
+              }}
             >
               {category}
               <span className="category-count">
@@ -201,20 +228,23 @@ function App() {
       <div className="content">
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', // Responsive columns
+          gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
           gap: '16px',
           padding: '16px',
           height: '100vh',
           overflow: 'auto',
           maxWidth: '100%'
         }}>
-          {rules.map((rule) => (
-            <RuleCard 
-              key={rule.slug} 
-              rule={rule} 
-              onSelect={handleRuleSelect} 
-            />
-          ))}
+          {filteredRules.map((rule, index) => {
+            console.log(`Rendering rule ${index}:`, { slug: rule.slug, title: rule.title });
+            return (
+              <RuleCard 
+                key={`${rule.slug}-${index}`}
+                rule={rule} 
+                onSelect={handleRuleSelect} 
+              />
+            );
+          })}
         </div>
       </div>
     </div>

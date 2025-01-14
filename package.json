@@ -35,7 +35,7 @@
   "activationEvents": [
     "onCommand:cursor-rules.openViewer"
   ],
-  "main": "./out/extension.js",
+  "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
@@ -61,16 +61,22 @@
     }
   },
   "scripts": {
-    "install:all": "npm install && cd webview-ui && npm install",
-    "start:webview": "cd webview-ui && npm run start",
-    "build:webview": "cd webview-ui && npm run build",
-    "vscode:prepublish": "npm run build:webview && npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint",
+    "install:all": "yarn install && cd webview-ui && yarn install",
+    "start:webview": "cd webview-ui && yarn run start",
+    "build:webview": "cd webview-ui && yarn run build",
+    "vscode:prepublish": "yarn run build:webview && yarn run compile",
+    "compile": "npm run check-types && npm run lint && node esbuild.js",
+    "watch": "npm-run-all -p watch:*",
+    "watch:esbuild": "node esbuild.js --watch",
+    "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+    "check-types": "tsc --noEmit",
+    "format": "prettier . --check",
+    "format:fix": "prettier . --write",
+    "pretest": "yarn run compile && yarn run lint",
     "lint": "eslint src --ext ts",
-    "package": "vsce package --no-dependencies",
-    "publish": "vsce publish",
+    "package": "npm run build:webview && npm run check-types && npm run lint && node esbuild.js --production",
+    "vsce:package": "vsce package",
+    "publish:marketplace": "vsce publish && ovsx publish",
     "sync-rules": "node scripts/sync-rules.js"
   },
   "devDependencies": {
@@ -80,9 +86,11 @@
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
     "@vscode/vsce": "^2.22.0",
+    "esbuild": "^0.24.2",
     "eslint": "^8.56.0",
     "glob": "^7.2.0",
     "minimatch": "^3.1.2",
+    "npm-run-all": "^4.1.5",
     "prettier": "^3.2.4",
     "typescript": "^5.3.3",
     "vscode-test": "^1.6.1"

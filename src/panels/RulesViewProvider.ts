@@ -27,8 +27,7 @@ export class RulesViewProvider {
   private static readonly RULES_URL = 'https://raw.githubusercontent.com/tigerlove/vscode-extension-cursordir/main/webview-ui/public/rules.json';
   private static readonly LAST_SYNC_KEY = 'cursorRules.lastSync';
   private static readonly RULES_CACHE_KEY = 'cursorRules.cachedRules';
-  private static readonly RULES_JSON_PATH = path.join(__dirname, '..', '..', 'webview-ui', 'build', 'rules.json');
-  private static readonly RULES_ROOT_PATH = path.join(__dirname, '..', '..', 'rules.json');
+  private static readonly RULES_JSON_PATH = path.join(__dirname, '..', 'webview-ui', 'build', 'rules.json');
 
   private constructor(private readonly _extensionUri: vscode.Uri) {
     console.log('RulesViewProvider constructor called');
@@ -221,10 +220,6 @@ export class RulesViewProvider {
         // Save to webview-ui build assets for local/offline access
         fs.writeFileSync(RulesViewProvider.RULES_JSON_PATH, rulesJson);
         console.log('Saved rules to webview assets:', RulesViewProvider.RULES_JSON_PATH);
-
-        // Save to root directory as sync source
-        fs.writeFileSync(RulesViewProvider.RULES_ROOT_PATH, rulesJson);
-        console.log('Saved rules to root:', RulesViewProvider.RULES_ROOT_PATH);
       } catch (error) {
         console.error('Error saving rules files:', error);
         throw new Error('Failed to save rules locally');
